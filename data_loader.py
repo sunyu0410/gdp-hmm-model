@@ -30,7 +30,8 @@ Lung_OAR_LIST = ["PTV_Ring.3-2", "Total Lung-GTV", "SpinalCord",  "Heart",  "LAD
 
 Lung_OAR_DICT = {Lung_OAR_LIST[i]: (i+10) for i in range(len(Lung_OAR_LIST))}
 
-
+from pathlib import Path
+data_dir = Path('/workspace/data/train_np')
 
 class MyDataset(Dataset):
     
@@ -91,7 +92,7 @@ class MyDataset(Dataset):
         if len(str(PatientID)) < 3:
             PatientID = f"{PatientID:0>3}"
         
-        data_npz = np.load(data_path, allow_pickle=True)
+        data_npz = np.load(data_dir/data_path.split('GDP-HMM_Challenge/')[1], allow_pickle=True)
 
         In_dict = dict(data_npz)['arr_0'].item()
 
