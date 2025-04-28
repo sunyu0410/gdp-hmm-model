@@ -6,3 +6,6 @@ pip3 install gdown
 pip3 install monai
 pip3 install opencv-python-headless
 pip3 install huggingface_hub
+
+git config --global user.email "sunyu0410@gmail.com"
+git config --global user.name "Yu Sun"
