@@ -1,14 +1,14 @@
 # Inference script for test data
 # Yu Sun (yu.sun@petermac.org)
-# 
-# 
-# Run: 
+#
+#
+# Run:
 #  cd /workspace
 #  python inference.py [data_dir] [output_dir]
 #  python inference.py [data_dir] will use /results as output_dir
 #
 # E.g. python inference.py data_demo results_demo
-# 
+#
 
 import torch
 
@@ -35,10 +35,10 @@ model = create_mednext_v1(
     deep_supervision=False,
 ).to(device)
 
-model.load_state_dict(torch.load(code_dir/"weights/7c_v2.pt"))
+model.load_state_dict(torch.load(code_dir / "weights/7c_v2.pt"))
 
 
-def inference(data_dir='/data', out_dir="/results", dose_div_factor=10):
+def inference(data_dir="/data", out_dir="/results", dose_div_factor=10):
 
     data_dir, out_dir = Path(data_dir), Path(out_dir)
     if not out_dir.exists():
@@ -64,7 +64,7 @@ def inference(data_dir='/data', out_dir="/results", dose_div_factor=10):
     ds = MyDataset(cfig, "test")
 
     # Inference: iterate through the dataset since aug is within
-    for data_dict in tqdm(ds):
+    for data_dict in tqdm(ds, "Running Inference"):
         # Get the first 7 channel (what the model was trained on)
         x = data_dict["data"].to(device)
         x = x[:-1].unsqueeze(0)
@@ -79,15 +79,17 @@ def inference(data_dir='/data', out_dir="/results", dose_div_factor=10):
         # Save results
         outfile = out_dir / f'{data_dict["id"]}_pred.npy'
         np.save(outfile, pred_ori)
+        print(f"[INFO] Results saved: {outfile}")
+    print("Inference finished")
 
 
 if __name__ == "__main__":
     print(__file__)
-    if len(sys.argv)==3:
+    if len(sys.argv) == 3:
         data_dir, out_dir = sys.argv[1:]
         inference(data_dir, out_dir)
-    elif len(sys.argv)==2:
+    elif len(sys.argv) == 2:
         data_dir = sys.argv[1]
         inference(data_dir)
     else:
-        print('Invalid input')
+        print("Invalid input")
