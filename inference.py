@@ -1,17 +1,30 @@
+# Inference script for test data
+# Yu Sun (yu.sun@petermac.org)
+# 
+# 
+# Run: 
+#  cd /workspace
+#  python inference.py [data_dir] [output_dir]
+#  python inference.py [data_dir] will use /results as output_dir
+#
+# E.g. python inference.py data_demo results_demo
+# 
+
 import torch
 
 from pathlib import Path
 from data_loader import MyDataset
-import pandas as pd
 
 import numpy as np
 from tqdm import tqdm
 
 from nnunet_mednext import create_mednext_v1
 import torch
-
+import sys
+import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+code_dir = Path(__file__).parent
 
 # Load model
 model = create_mednext_v1(
@@ -22,14 +35,14 @@ model = create_mednext_v1(
     deep_supervision=False,
 ).to(device)
 
-model.load_state_dict(torch.load("weights/7c_v2.pt"))
+model.load_state_dict(torch.load(code_dir/"weights/7c_v2.pt"))
 
 
-def inference(data_dir, out_dir="/results", dose_div_factor=10):
+def inference(data_dir='/data', out_dir="/results", dose_div_factor=10):
 
     data_dir, out_dir = Path(data_dir), Path(out_dir)
     if not out_dir.exists():
-        out_dir.mkdirs()
+        out_dir.mkdir()
 
     cfig = {
         "train_bs": 4,
@@ -69,5 +82,12 @@ def inference(data_dir, out_dir="/results", dose_div_factor=10):
 
 
 if __name__ == "__main__":
-    data_dir = Path("data_demo")
-    inference(data_dir)
+    print(__file__)
+    if len(sys.argv)==3:
+        data_dir, out_dir = sys.argv[1:]
+        inference(data_dir, out_dir)
+    elif len(sys.argv)==2:
+        data_dir = sys.argv[1]
+        inference(data_dir)
+    else:
+        print('Invalid input')
