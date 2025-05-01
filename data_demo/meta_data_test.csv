@@ -1,0 +1,5 @@
+PID,PlanID,isVMAT,cohort,site,phase,dev_split,npz_path,D05_div_D95,max_div_D95
+0617-259694,imrt,FALSE,1,2,valid,test,data_demo/0617-259694+imrt+MOS_33896.npz,1.032,1.053
+0617-259694,2Ac,TRUE,1,2,train,train,data_demo/0617-259694+2Ac+MOS_33896.npz,1.033,1.063
+HNC_001,9Ag,FALSE,3,1,valid,test,data_demo/HNC_001+9Ag+MOS_25934.npz,1.047,1.073
+HNC_001,A4Ac,TRUE,3,1,train,train,data_demo/HNC_001+A4Ac+MOS_25934.npz,1.041,1.072
