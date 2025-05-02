@@ -70,7 +70,9 @@ def inference(data_dir="/data", out_dir="/results", dose_div_factor=10):
         x = x[:-1].unsqueeze(0)
 
         # Get the prediction
-        pred = model(x)[0] * dose_div_factor
+        pred = model(x) 
+        pred = pred.clip(0, x[:,0:1].max())
+        pred = pred[0]* dose_div_factor
 
         # Place back to original space
         pred_ori = ds.aug.inverse(dict(img=pred))["img"]
